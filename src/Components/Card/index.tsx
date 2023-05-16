@@ -3,12 +3,29 @@ import { ItemsI } from "../../Pages/Home";
 import generateRandomNumber from "../../Helpers/randomNumber";
 import formatCurrency from "../../Helpers/formatCurrency";
 import { ShoppingCartContext } from "../../Context";
+import { PlusIcon } from "@heroicons/react/24/solid";
 
-const Card: FC<ItemsI> = ({ category: { name }, images, price, title }) => {
-  const { count, setcount } = useContext(ShoppingCartContext);
+const Card: FC<ItemsI> = ({
+  category: { name },
+  images,
+  price,
+  title,
+  id,
+  description,
+}) => {
+  const { count, setcount, openProductDetail, setproductDetail } =
+    useContext(ShoppingCartContext);
+
+  const showProduct = () => {
+    setproductDetail({ name, images, price, title, id, description });
+    openProductDetail();
+  };
 
   return (
-    <div className="bg-white cursor-pointer w-56 h-60 rounded-lg">
+    <div
+      className="bg-white cursor-pointer w-56 h-60 rounded-lg"
+      onClick={() => showProduct()}
+    >
       <figure className="relative mb-2 w-full h-4/5">
         <span className="absolute bottom-0 left-0 bg-white/60 rounded-lg text-black text-xs m-2 px-3 py-0.5">
           {name}
@@ -22,7 +39,7 @@ const Card: FC<ItemsI> = ({ category: { name }, images, price, title }) => {
           className="absolute top-0 right-0 flex justify-center items-center bg-white w-6 h-6 rounded-full m-2 p-1"
           onClick={() => setcount(count + 1)}
         >
-          +
+          <PlusIcon />
         </div>
       </figure>
       <p className="flex justify-between">

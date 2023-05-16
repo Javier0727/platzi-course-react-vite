@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Layout from "../../Components/Layout";
 import Card from "../../Components/Card";
+import ProductDetail from "../../Components/ProductDetail";
 
 export interface ItemsI {
   id: number;
@@ -40,6 +41,7 @@ const Home: FC = () => {
           <Card key={item.id} {...item} />
         ))}
       </div>
+      <ProductDetail />
     </Layout>
   );
 };
