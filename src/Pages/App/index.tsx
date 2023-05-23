@@ -8,6 +8,7 @@ import SignIn from "../SignIn";
 import NotFound from "../404";
 import Navbar from "../../Components/Navbar";
 import { ShoppingCartProvider } from "../../Context";
+import CheckoutSideMenu from "../../Components/CheckoutSideMenu";
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -45,6 +46,7 @@ const App: FC = () => {
       <BrowserRouter>
         <AppRoutes />
         <Navbar />
+        <CheckoutSideMenu />
       </BrowserRouter>
     </ShoppingCartProvider>
   );

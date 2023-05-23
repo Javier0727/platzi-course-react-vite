@@ -1,9 +1,8 @@
-import { FC, useContext } from "react";
+import { FC, MouseEvent, useContext } from "react";
 import { ItemsI } from "../../Pages/Home";
-import generateRandomNumber from "../../Helpers/randomNumber";
 import formatCurrency from "../../Helpers/formatCurrency";
 import { ShoppingCartContext } from "../../Context";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { CheckIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 const Card: FC<ItemsI> = ({
   category: { name },
@@ -13,12 +12,54 @@ const Card: FC<ItemsI> = ({
   id,
   description,
 }) => {
-  const { count, setcount, openProductDetail, setproductDetail } =
-    useContext(ShoppingCartContext);
+  const {
+    count,
+    setcount,
+    openProductDetail,
+    setproductDetail,
+    cartProducts,
+    setcartProducts,
+    openCheckoutSideMenu,
+    closeProductDetail,
+  } = useContext(ShoppingCartContext);
 
   const showProduct = () => {
     setproductDetail({ name, images, price, title, id, description });
     openProductDetail();
+  };
+
+  const addProductToCart = (
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    event.stopPropagation();
+    setcount(count + 1);
+    setcartProducts([
+      ...cartProducts,
+      { description, id, images, name, price, title },
+    ]);
+    closeProductDetail();
+    openCheckoutSideMenu();
+  };
+
+  const renderIcon = () => {
+    const isInCart =
+      cartProducts.filter((product) => product.id === id).length > 0;
+    if (isInCart) {
+      return (
+        <div className="absolute transition duration-300 top-0 right-0 flex justify-center items-center bg-green-500 w-6 h-6 rounded-full m-2 p-1 cursor-default">
+          <CheckIcon className="text-white" />
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className="absolute transition duration-300 top-0 right-0 flex justify-center items-center bg-white w-6 h-6 rounded-full m-2 p-1"
+          onClick={(event) => addProductToCart(event)}
+        >
+          <PlusIcon />
+        </div>
+      );
+    }
   };
 
   return (
@@ -31,16 +72,11 @@ const Card: FC<ItemsI> = ({
           {name}
         </span>
         <img
-          src={images[generateRandomNumber(images.length) - 1]}
+          src={images[0]}
           alt={title}
           className="w-full h-full object-cover rounded-lg"
         />
-        <div
-          className="absolute top-0 right-0 flex justify-center items-center bg-white w-6 h-6 rounded-full m-2 p-1"
-          onClick={() => setcount(count + 1)}
-        >
-          <PlusIcon />
-        </div>
+        {renderIcon()}
       </figure>
       <p className="flex justify-between">
         <span className="text-sm font-light">{title}</span>

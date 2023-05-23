@@ -1,30 +1,30 @@
 import { ReactNode, createContext, useState } from "react";
 
-export const ShoppingCartContext = createContext<{
+export interface ProductDetailI {
+  name: string;
+  images: string[];
+  price: number;
+  title: string;
+  id: number;
+  description: string;
+}
+
+interface ShoppingCartContextI {
   count: number;
   setcount: React.Dispatch<React.SetStateAction<number>>;
   showProductDetail: boolean;
   openProductDetail: () => void;
   closeProductDetail: () => void;
-  productDetail: {
-    name: string;
-    images: string[];
-    price: number;
-    title: string;
-    id: number;
-    description: string;
-  };
-  setproductDetail: React.Dispatch<
-    React.SetStateAction<{
-      name: string;
-      images: string[];
-      price: number;
-      title: string;
-      id: number;
-      description: string;
-    }>
-  >;
-}>({
+  productDetail: ProductDetailI;
+  setproductDetail: React.Dispatch<React.SetStateAction<ProductDetailI>>;
+  cartProducts: ProductDetailI[];
+  setcartProducts: React.Dispatch<React.SetStateAction<ProductDetailI[]>>;
+  showCheckoutSideMenu: boolean;
+  openCheckoutSideMenu: () => void;
+  closeCheckoutSideMenu: () => void;
+}
+
+export const ShoppingCartContext = createContext<ShoppingCartContextI>({
   count: 0,
   setcount: (value) => value,
   showProductDetail: false,
@@ -39,19 +39,19 @@ export const ShoppingCartContext = createContext<{
     description: "",
   },
   setproductDetail: (value) => value,
+  cartProducts: [],
+  setcartProducts: (value) => value,
+  showCheckoutSideMenu: false,
+  openCheckoutSideMenu: () => "",
+  closeCheckoutSideMenu: () => "",
 });
 
 export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
   const [count, setcount] = useState<number>(0);
   const [showProductDetail, setshowProductDetail] = useState<boolean>(false);
-  const [productDetail, setproductDetail] = useState<{
-    name: string;
-    images: string[];
-    price: number;
-    title: string;
-    id: number;
-    description: string;
-  }>({
+  const [showCheckoutSideMenu, setshowCheckoutSideMenu] =
+    useState<boolean>(false);
+  const [productDetail, setproductDetail] = useState<ProductDetailI>({
     name: "",
     images: [],
     price: 0,
@@ -59,9 +59,13 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
     id: 0,
     description: "",
   });
+  const [cartProducts, setcartProducts] = useState<ProductDetailI[]>([]);
 
   const openProductDetail = () => setshowProductDetail(true);
   const closeProductDetail = () => setshowProductDetail(false);
+
+  const openCheckoutSideMenu = () => setshowCheckoutSideMenu(true);
+  const closeCheckoutSideMenu = () => setshowCheckoutSideMenu(false);
 
   return (
     <ShoppingCartContext.Provider
@@ -73,6 +77,11 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
         closeProductDetail,
         productDetail,
         setproductDetail,
+        cartProducts,
+        setcartProducts,
+        showCheckoutSideMenu,
+        openCheckoutSideMenu,
+        closeCheckoutSideMenu,
       }}
     >
       {children}
