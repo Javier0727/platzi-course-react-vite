@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 export interface ProductDetailI {
   name: string;
@@ -16,6 +16,19 @@ export interface OrderI {
   totalPrice: number;
 }
 
+export interface ItemsI {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: {
+    id: number;
+    name: string;
+    image: string;
+  };
+  images: string[];
+}
+
 interface ShoppingCartContextI {
   count: number;
   setcount: React.Dispatch<React.SetStateAction<number>>;
@@ -31,6 +44,10 @@ interface ShoppingCartContextI {
   closeCheckoutSideMenu: () => void;
   order: OrderI[];
   setorder: React.Dispatch<React.SetStateAction<OrderI[]>>;
+  items: ItemsI[];
+  setitems: React.Dispatch<React.SetStateAction<ItemsI[]>>;
+  searchByTitle: string;
+  setsearchByTitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const ShoppingCartContext = createContext<ShoppingCartContextI>({
@@ -55,6 +72,10 @@ export const ShoppingCartContext = createContext<ShoppingCartContextI>({
   closeCheckoutSideMenu: () => "",
   order: [],
   setorder: () => "",
+  items: [],
+  setitems: () => "",
+  searchByTitle: "",
+  setsearchByTitle: () => "",
 });
 
 export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
@@ -72,12 +93,28 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
   });
   const [cartProducts, setcartProducts] = useState<ProductDetailI[]>([]);
   const [order, setorder] = useState<OrderI[]>([]);
+  const [items, setitems] = useState<ItemsI[]>([]);
+  const [searchByTitle, setsearchByTitle] = useState<string>("");
 
   const openProductDetail = () => setshowProductDetail(true);
   const closeProductDetail = () => setshowProductDetail(false);
 
   const openCheckoutSideMenu = () => setshowCheckoutSideMenu(true);
   const closeCheckoutSideMenu = () => setshowCheckoutSideMenu(false);
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
+  const getItems = async () => {
+    try {
+      const response = await fetch("https://api.escuelajs.co/api/v1/products");
+      const data = await response.json();
+      setitems(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ShoppingCartContext.Provider
@@ -96,6 +133,10 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
         closeCheckoutSideMenu,
         order,
         setorder,
+        items,
+        setitems,
+        searchByTitle,
+        setsearchByTitle,
       }}
     >
       {children}

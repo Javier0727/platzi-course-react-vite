@@ -21,7 +21,21 @@ const NavLinkStyled: FC<{
 );
 
 const Navbar: FC = () => {
-  const { count } = useContext(ShoppingCartContext);
+  const { count, items } = useContext(ShoppingCartContext);
+
+  const getNavBarCategories = () => {
+    const filteredCategories = [
+      ...new Map(items.map((item) => [item.category.name, item])).values(),
+    ];
+    return filteredCategories.map((category) => (
+      <li>
+        <NavLinkStyled to={`/${category.category.name}`}>
+          {category.category.name}
+        </NavLinkStyled>
+      </li>
+    ));
+  };
+
   return (
     <nav className="flex justify-between items-center fixed z-10 top-0 w-full py-5 px-8 text-sm font-light">
       <ul className="flex items-center gap-3">
@@ -33,21 +47,7 @@ const Navbar: FC = () => {
         <li>
           <NavLinkStyled to="/">All</NavLinkStyled>
         </li>
-        <li>
-          <NavLinkStyled to="/clothes">Clothes</NavLinkStyled>
-        </li>
-        <li>
-          <NavLinkStyled to="/electronics">Electronics</NavLinkStyled>
-        </li>
-        <li>
-          <NavLinkStyled to="/furnitures">Furnitures</NavLinkStyled>
-        </li>
-        <li>
-          <NavLinkStyled to="/toys">Toys</NavLinkStyled>
-        </li>
-        <li>
-          <NavLinkStyled to="/others">Others</NavLinkStyled>
-        </li>
+        {getNavBarCategories()}
       </ul>
       <ul className="flex items-center gap-3">
         <li className="text-black/60">javi@javi.com</li>
