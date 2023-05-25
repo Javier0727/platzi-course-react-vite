@@ -4,7 +4,7 @@ import { ProductDetailI } from "../../Context";
 import formatCurrency from "../../Helpers/formatCurrency";
 
 const OrderCard: FC<
-  ProductDetailI & { handleDelete: (id: number) => void }
+  ProductDetailI & { handleDelete?: (id: number) => void }
 > = ({ id, title, images, price, handleDelete }) => {
   return (
     <div className="flex justify-between items-center mb-3">
@@ -19,10 +19,12 @@ const OrderCard: FC<
         <p className="text-sm font-light">{title}</p>
         <div className="flex items-center gap-2">
           <p className="text-lg font-medium">{formatCurrency(price)}</p>
-          <XMarkIcon
-            onClick={() => handleDelete(id)}
-            className="w-6 h-6 cursor-pointer"
-          />
+          {!!handleDelete && (
+            <XMarkIcon
+              onClick={() => handleDelete(id)}
+              className="w-6 h-6 cursor-pointer"
+            />
+          )}
         </div>
       </div>
     </div>

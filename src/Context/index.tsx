@@ -9,6 +9,13 @@ export interface ProductDetailI {
   description: string;
 }
 
+export interface OrderI {
+  date: Date;
+  products: ProductDetailI[];
+  totalProducts: number;
+  totalPrice: number;
+}
+
 interface ShoppingCartContextI {
   count: number;
   setcount: React.Dispatch<React.SetStateAction<number>>;
@@ -22,6 +29,8 @@ interface ShoppingCartContextI {
   showCheckoutSideMenu: boolean;
   openCheckoutSideMenu: () => void;
   closeCheckoutSideMenu: () => void;
+  order: OrderI[];
+  setorder: React.Dispatch<React.SetStateAction<OrderI[]>>;
 }
 
 export const ShoppingCartContext = createContext<ShoppingCartContextI>({
@@ -44,6 +53,8 @@ export const ShoppingCartContext = createContext<ShoppingCartContextI>({
   showCheckoutSideMenu: false,
   openCheckoutSideMenu: () => "",
   closeCheckoutSideMenu: () => "",
+  order: [],
+  setorder: () => "",
 });
 
 export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
@@ -60,6 +71,7 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
     description: "",
   });
   const [cartProducts, setcartProducts] = useState<ProductDetailI[]>([]);
+  const [order, setorder] = useState<OrderI[]>([]);
 
   const openProductDetail = () => setshowProductDetail(true);
   const closeProductDetail = () => setshowProductDetail(false);
@@ -82,6 +94,8 @@ export const ShoppingCartProvider = ({ children }: { children: ReactNode }) => {
         showCheckoutSideMenu,
         openCheckoutSideMenu,
         closeCheckoutSideMenu,
+        order,
+        setorder,
       }}
     >
       {children}
