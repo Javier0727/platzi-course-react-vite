@@ -1,7 +1,6 @@
 import { FC, MouseEvent, useContext } from "react";
-import { ItemsI } from "../../Pages/Home";
 import formatCurrency from "../../Helpers/formatCurrency";
-import { ShoppingCartContext } from "../../Context";
+import { ItemsI, ShoppingCartContext } from "../../Context";
 import { CheckIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 const Card: FC<ItemsI> = ({
